@@ -9,11 +9,20 @@ import Foundation
 
 enum Endpoints {
   case allOrders
+  case placeOrders
+  case deleteOrder(Int)
+  case updateOrder(Int)
   
   var path: String {
     switch self {
       case .allOrders:
-        return "/test/orders" // /orders // /test/orders
+        return "/orders" // /orders // /test/orders
+      case .placeOrders:
+        return "/newOrder" // /newOrder, // /test/orders
+      case .deleteOrder(let orderId):
+        return "/orders/\(orderId)" // /orders/:id, // /test/orders/:id
+      case .updateOrder(let orderId):
+        return "/orders/\(orderId)" // /orders/:id, // /test/orders/:id
     }
   }
 }
@@ -48,3 +57,102 @@ enum AppEnvironment: String {
     }
   }
 }
+
+
+//Resource: TEST Server Endpoints
+//Endpoints
+//
+//Get all orders:
+//
+//method: GET
+//
+//https://island-bramble.glitch.me/test/orders
+//
+//Create a new order:
+//
+//method: POST
+//
+//https://island-bramble.glitch.me/test/orders
+//
+//Body:
+//
+//{
+//  "name": "John Doe",
+//  "coffeeName": "Hot Coffee",
+//  "total": 4.50,
+//  "size": "Medium"
+//}
+//Delete an order:
+//
+//method: DELETE
+//
+//https://island-bramble.glitch.me/test/orders/:id
+//
+//Update an order:
+//
+//method: PUT
+//
+//https://island-bramble.glitch.me/test/orders/:id
+//
+//Body:
+//
+//{
+//  "name": "John Doe Edit",
+//  "coffeeName": "Hot Coffee Edit",
+//  "total": 2.50,
+//  "size": "Small"
+//}
+
+
+//Resource: PROD Server Endpoints
+//Endpoints
+//Get all orders:
+//
+//method: GET
+//
+//https://island-bramble.glitch.me/orders
+//
+//Create a new order:
+//
+//method: POST
+//
+//https://island-bramble.glitch.me/newOrder
+//
+//Body:
+//
+//{
+//  "name": "John Doe",
+//  "coffeeName": "Hot Coffee",
+//  "total": 4.50,
+//  "size": "Medium"
+//}
+//Delete an order:
+//
+//method: DELETE
+//
+//https://island-bramble.glitch.me/orders/:id
+//
+//
+//
+//Update an order:
+//
+//method: PUT
+//
+//https://island-bramble.glitch.me/orders/:id
+//
+//Body:
+//
+//{
+//  "name": "John Doe Edit",
+//  "coffeeName": "Hot Coffee Edit",
+//  "total": 2.50,
+//  "size": "Small"
+//}
+
+
+
+
+
+
+
+

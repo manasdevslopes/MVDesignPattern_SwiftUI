@@ -10,30 +10,65 @@ import SwiftUI
 struct ContentView: View {
   @EnvironmentObject private var model: CoffeeModel
   
+  @State private var isPresented: Bool = false
+  
   var body: some View {
-    VStack {
-      if model.orders.isEmpty {
-        Text("No Orders Available!").accessibilityIdentifier("noOrdersText")
+    NavigationStack {
+      VStack {
+        if model.orders.isEmpty {
+          Text("No Orders Available!").accessibilityIdentifier("noOrdersText")
+        } else {
+          List {
+            ForEach(model.orders) { order in
+              OrderCellView(order: order)
+            }.onDelete(perform: deleteOrder)
+          }
+        }
       }
-      List(model.orders) { order in
-        OrderCellView(order: order)
+      .task {
+        await populateOrders()
       }
-    }
-    .task {
-      await populateOrders()
+      .sheet(isPresented: $isPresented) {
+        AddCoffeeView()
+      }
+      .toolbar {
+        ToolbarItem(placement: .navigationBarTrailing) {
+          Button("Add New Order") {
+            isPresented.toggle()
+          }.accessibilityIdentifier("addNewOrderButton")
+        }
+      }
     }
   }
 }
 
 extension ContentView {
-  func populateOrders() async {
+  private func populateOrders() async {
     do {
       try await model.populateOrders()
     } catch {
       print(error)
     }
   }
+  
+  private func deleteOrder(_ indexSet: IndexSet) {
+    indexSet.forEach { index in
+      print("INDEX__------->", index)
+      let order = model.orders[index]
+      print("ORDER------->", order)
+      guard let orderId = order.id else { return }
+      print("orderId------->", orderId)
+      Task {
+        do {
+          try await model.deleteOrder(orderId)
+        } catch {
+          print(error)
+        }
+      }
+    }
+  }
 }
+
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     var config = Configuration()

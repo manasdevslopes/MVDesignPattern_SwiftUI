@@ -20,8 +20,6 @@ class Webservice {
   }
   
   func getOrders() async throws -> [Order] {
-    // https://island-bramble.glitch.me/test/orders
-    // https://island-bramble.glitch.me/orders
     guard let url = URL(string: Endpoints.allOrders.path, relativeTo: baseURL)
     else { throw NetworkError.badUrl }
     
@@ -35,103 +33,59 @@ class Webservice {
     
     return orders
   }
+  
+  func placeOrder(order: Order) async throws -> Order {
+    guard let url = URL(string: Endpoints.placeOrders.path, relativeTo: baseURL)
+    else { throw NetworkError.badUrl }
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.httpBody = try JSONEncoder().encode(order)
+    
+    let (data, response) = try await URLSession.shared.data(for: request)
+    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200
+    else { throw NetworkError.badRequest }
+    
+    guard let newOrder = try? JSONDecoder().decode(Order.self, from: data)
+    else { throw NetworkError.decodingError }
+    
+    return newOrder
+  }
+  
+  func deleteOrder(orderId: Int) async throws -> Order {
+    guard let url = URL(string: Endpoints.deleteOrder(orderId).path, relativeTo: baseURL)
+    else { throw NetworkError.badUrl }
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "DELETE"
+    
+    let (data, response) = try await URLSession.shared.data(for: request)
+    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200
+    else { throw NetworkError.badRequest }
+    print("DATA------>", data)
+    guard let deletedOrder = try? JSONDecoder().decode(Order.self, from: data)
+    else { throw NetworkError.decodingError }
+    
+    return deletedOrder
+  }
+  
+  func updateOrder(_ order: Order) async throws -> Order {
+    guard let orderId = order.id else { throw NetworkError.badUrl }
+    guard let url = URL(string: Endpoints.updateOrder(orderId).path, relativeTo: baseURL)
+    else { throw NetworkError.badUrl }
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "PUT"
+    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    
+    let (data, response) = try await URLSession.shared.data(for: request)
+    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200
+    else { throw NetworkError.badRequest }
+    
+    guard let updatedOrder = try? JSONDecoder().decode(Order.self, from: data)
+    else { throw NetworkError.decodingError }
+    
+    return updatedOrder
+  }
 }
-
-
-//Resource: TEST Server Endpoints
-//Endpoints
-//
-//Get all orders:
-//
-//method: GET
-//
-//https://island-bramble.glitch.me/test/orders
-//
-//Create a new order:
-//
-//method: POST
-//
-//https://island-bramble.glitch.me/test/orders
-//
-//Body:
-//
-//{
-//  "name": "John Doe",
-//  "coffeeName": "Hot Coffee",
-//  "total": 4.50,
-//  "size": "Medium"
-//}
-//Delete an order:
-//
-//method: DELETE
-//
-//https://island-bramble.glitch.me/test/orders/:id
-//
-//Update an order:
-//
-//method: PUT
-//
-//https://island-bramble.glitch.me/test/orders/:id
-//
-//Body:
-//
-//{
-//  "name": "John Doe Edit",
-//  "coffeeName": "Hot Coffee Edit",
-//  "total": 2.50,
-//  "size": "Small"
-//}
-
-
-//Resource: PROD Server Endpoints
-//Endpoints
-//Get all orders:
-//
-//method: GET
-//
-//https://island-bramble.glitch.me/orders
-//
-//Create a new order:
-//
-//method: POST
-//
-//https://island-bramble.glitch.me/newOrder
-//
-//Body:
-//
-//{
-//  "name": "John Doe",
-//  "coffeeName": "Hot Coffee",
-//  "total": 4.50,
-//  "size": "Medium"
-//}
-//Delete an order:
-//
-//method: DELETE
-//
-//https://island-bramble.glitch.me/orders/:id
-//
-//
-//
-//Update an order:
-//
-//method: PUT
-//
-//https://island-bramble.glitch.me/orders/:id
-//
-//Body:
-//
-//{
-//  "name": "John Doe Edit",
-//  "coffeeName": "Hot Coffee Edit",
-//  "total": 2.50,
-//  "size": "Small"
-//}
-
-
-
-
-
-
-
-
