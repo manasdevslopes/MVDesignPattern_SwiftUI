@@ -21,6 +21,11 @@ class CoffeeModel: ObservableObject {
     self.orders = try await webservice.getOrders()
   }
   
+  func orderById(_ id: Int) -> Order? {
+    guard let index = orders.firstIndex(where: { $0.id == id }) else { return nil }
+    return orders[index]
+  }
+  
   func placeOrder(_ order: Order) async throws {
     let newOrder = try await webservice.placeOrder(order: order)
     orders.append(newOrder)

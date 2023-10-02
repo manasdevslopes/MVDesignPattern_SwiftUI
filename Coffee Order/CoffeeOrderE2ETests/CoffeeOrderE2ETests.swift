@@ -15,7 +15,7 @@ import XCTest
 // When
 // Then
 
-final class CoffeeOrderE2ETests: XCTestCase {
+final class when_app_is_launched_with_no_orders: XCTestCase {
   
   func test_ContentView_no_order_message_is_displayed() throws {
     let app = XCUIApplication()
@@ -26,7 +26,7 @@ final class CoffeeOrderE2ETests: XCTestCase {
   }
 }
 
-final class AddCoffeeViewE2ETests: XCTestCase {
+final class when_adding_a_new_coffee_order: XCTestCase {
   private var app: XCUIApplication!
   
   // Called before running each test
@@ -71,7 +71,7 @@ final class AddCoffeeViewE2ETests: XCTestCase {
   }
 }
 
-final class DeleteCoffeeViewE2ETests: XCTestCase {
+final class when_deleting_an_order: XCTestCase {
   private var app: XCUIApplication!
   
   // Called before running each test
@@ -114,6 +114,78 @@ final class DeleteCoffeeViewE2ETests: XCTestCase {
   }
   
   // Called after running each test
+  override func tearDown() {
+    Task {
+      guard let url = URL(string: "/test/clear-orders", relativeTo: URL(string: "https://island-bramble.glitch.me")!) else { return }
+      let (_, _) = try! await URLSession.shared.data(from: url)
+    }
+  }
+}
+
+final class when_updating_an_existing_order: XCTestCase {
+  private var app: XCUIApplication!
+  
+  override func setUp()  {
+    app = XCUIApplication()
+    continueAfterFailure = false
+    app.launchEnvironment = ["ENV": "TEST"]
+    app.launch()
+    
+    // go to the add order screen
+    app.buttons["addNewOrderButton"].tap()
+    
+    // write into textfields
+    let nameTextField = app.textFields["name"]
+    let coffeeNameTextField = app.textFields["coffeeName"]
+    let priceTextField = app.textFields["price"]
+    let placeOrderButton = app.buttons["placeOrderButton"]
+    
+    nameTextField.tap()
+    nameTextField.typeText("Manas Vj")
+    
+    coffeeNameTextField.tap()
+    coffeeNameTextField.typeText("Cold Coffee")
+    
+    priceTextField.tap()
+    priceTextField.typeText("2.0")
+    
+    // place the order
+    placeOrderButton.tap()
+  }
+  
+  func test_should_update_order_successfully() {
+    
+    // go to the order screen
+    let orderList = app.collectionViews["orderList"]
+    orderList.buttons["orderNameText-coffeeNameAndSizeText-coffeePriceText"].tap()
+    
+    app.buttons["editOrderButton"].tap()
+    
+    let nameTextField = app.textFields["name"]
+    let coffeeNameTextField = app.textFields["coffeeName"]
+    let priceTextField = app.textFields["price"]
+    let placeOrderButton = app.buttons["placeOrderButton"]
+    
+    let _ = nameTextField.waitForExistence(timeout: 10.0)
+    nameTextField.tap(withNumberOfTaps: 3, numberOfTouches: 1)
+    nameTextField.typeText("Manas E")
+    
+    let _ = coffeeNameTextField.waitForExistence(timeout: 10.0)
+    coffeeNameTextField.tap(withNumberOfTaps: 3, numberOfTouches: 1)
+    coffeeNameTextField.typeText("ColdCoffee E")
+    
+    let _ = priceTextField.waitForExistence(timeout: 10.0)
+    priceTextField.tap(withNumberOfTaps: 3, numberOfTouches: 1)
+    priceTextField.typeText("2.50")
+    
+    let _ = placeOrderButton.waitForExistence(timeout: 10.0)
+    placeOrderButton.tap()
+    
+    XCTAssertEqual("ColdCoffee E", app.staticTexts["coffeeNameText"].label)
+//    XCTAssertEqual("Manas E", app.staticTexts["coffeeBuyerNameText"].label)
+  }
+  
+  // TEAR DOWN FUNCTIONS RUNS AND THEN DELETE ALL ORDERS FROM THE TEST DATABASE
   override func tearDown() {
     Task {
       guard let url = URL(string: "/test/clear-orders", relativeTo: URL(string: "https://island-bramble.glitch.me")!) else { return }

@@ -16,13 +16,13 @@ enum Endpoints {
   var path: String {
     switch self {
       case .allOrders:
-        return "/orders" // /orders // /test/orders
+        return "/test/orders" // /orders // /test/orders
       case .placeOrders:
-        return "/newOrder" // /newOrder, // /test/orders
+        return "/test/new-order" // /newOrder, // /test/orders
       case .deleteOrder(let orderId):
-        return "/orders/\(orderId)" // /orders/:id, // /test/orders/:id
+        return "/test/orders/\(orderId)" // /orders/:id, // /test/orders/:id
       case .updateOrder(let orderId):
-        return "/orders/\(orderId)" // /orders/:id, // /test/orders/:id
+        return "/test/orders/\(orderId)" // /orders/:id, // /test/orders/:id
     }
   }
 }

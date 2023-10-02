@@ -18,6 +18,7 @@
 		FDAA97C22AC84D620036E527 /* NumberFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDAA97C12AC84D620036E527 /* NumberFormatter+Extensions.swift */; };
 		FDAA97C52AC84E890036E527 /* OrderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDAA97C42AC84E890036E527 /* OrderCellView.swift */; };
 		FDAA97C82AC84FBB0036E527 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDAA97C72AC84FBB0036E527 /* AppEnvironment.swift */; };
+		FDBD5C122ACAC8DB009FD841 /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDBD5C112ACAC8DB009FD841 /* OrderDetailView.swift */; };
 		FDC454162AC9801200A03B88 /* AddCoffeeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC454152AC9801200A03B88 /* AddCoffeeView.swift */; };
 		FDC454182AC9826F00A03B88 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC454172AC9826F00A03B88 /* View+Extensions.swift */; };
 		FDC4541A2AC9869100A03B88 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC454192AC9869100A03B88 /* String+Extensions.swift */; };
@@ -47,6 +48,7 @@
 		FDAA97C12AC84D620036E527 /* NumberFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NumberFormatter+Extensions.swift"; sourceTree = "<group>"; };
 		FDAA97C42AC84E890036E527 /* OrderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCellView.swift; sourceTree = "<group>"; };
 		FDAA97C72AC84FBB0036E527 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		FDBD5C112ACAC8DB009FD841 /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
 		FDC454152AC9801200A03B88 /* AddCoffeeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCoffeeView.swift; sourceTree = "<group>"; };
 		FDC454172AC9826F00A03B88 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		FDC454192AC9869100A03B88 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 			children = (
 				FDAA97C42AC84E890036E527 /* OrderCellView.swift */,
 				FDC454152AC9801200A03B88 /* AddCoffeeView.swift */,
+				FDBD5C112ACAC8DB009FD841 /* OrderDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 			files = (
 				FDAA97AD2AC840B20036E527 /* ContentView.swift in Sources */,
 				FDC4541A2AC9869100A03B88 /* String+Extensions.swift in Sources */,
+				FDBD5C122ACAC8DB009FD841 /* OrderDetailView.swift in Sources */,
 				FDAA97C52AC84E890036E527 /* OrderCellView.swift in Sources */,
 				FDAA97BF2AC844B40036E527 /* CoffeeModel.swift in Sources */,
 				FDAA97C22AC84D620036E527 /* NumberFormatter+Extensions.swift in Sources */,

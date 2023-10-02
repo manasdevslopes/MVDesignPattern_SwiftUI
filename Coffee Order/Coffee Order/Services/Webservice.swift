@@ -66,26 +66,26 @@ class Webservice {
     print("DATA------>", data)
     guard let deletedOrder = try? JSONDecoder().decode(Order.self, from: data)
     else { throw NetworkError.decodingError }
-    
+    print("deletedOrder_deletedOrder", deletedOrder)
     return deletedOrder
   }
   
   func updateOrder(_ order: Order) async throws -> Order {
-    guard let orderId = order.id else { throw NetworkError.badUrl }
+    guard let orderId = order.id else { throw NetworkError.badRequest }
     guard let url = URL(string: Endpoints.updateOrder(orderId).path, relativeTo: baseURL)
     else { throw NetworkError.badUrl }
     
     var request = URLRequest(url: url)
     request.httpMethod = "PUT"
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-    
+    request.httpBody = try JSONEncoder().encode(order)
+
     let (data, response) = try await URLSession.shared.data(for: request)
     guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200
     else { throw NetworkError.badRequest }
     
     guard let updatedOrder = try? JSONDecoder().decode(Order.self, from: data)
     else { throw NetworkError.decodingError }
-    
     return updatedOrder
   }
 }
