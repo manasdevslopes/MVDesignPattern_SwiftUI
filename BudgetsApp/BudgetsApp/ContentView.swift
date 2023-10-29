@@ -7,28 +7,50 @@
 
 import SwiftUI
 
+enum SheetAction: Identifiable {
+  case add
+  case edit(BudgetCategory)
+  
+  var id: Int {
+    switch self {
+      case .add:
+        return 1
+      case .edit(_):
+        return 2
+    }
+  }
+}
+
 struct ContentView: View {
   @Environment(\.managedObjectContext) private var viewContext
-  @FetchRequest(sortDescriptors: []) private var budgetCategoryResults: FetchedResults<BudgetCategory>
-  
-  @State private var isPresented: Bool = false
+  //  @FetchRequest(sortDescriptors: []) private var budgetCategoryResults: FetchedResults<BudgetCategory>
+  @FetchRequest(fetchRequest: BudgetCategory.all) var budgetCategoryResults
+  @State private var sheetAction: SheetAction?
   
   var body: some View {
     NavigationStack {
       VStack {
-        Text(total.formattedWithAbbreviations()).fontWeight(.bold)
-        BudgetListView(budgetCategoryResults: budgetCategoryResults, onDeleteBudgetCategory: deleteBudgetCategory)
+        HStack {
+          Text("Total Budget -")
+          Text(total.formattedWithAbbreviations()).fontWeight(.bold)
+        }
+        BudgetListView(budgetCategoryResults: budgetCategoryResults, onDeleteBudgetCategory: deleteBudgetCategory, onEditBudgetCategory: editBudgetCategory)
       }
       .padding()
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button("Add Category") {
-            isPresented.toggle()
+            sheetAction = .add
           }
         }
       }
-      .sheet(isPresented: $isPresented) {
-        AddBudgetCategoryView()
+      .sheet(item: $sheetAction) { sheetAction in
+        switch sheetAction {
+          case .add:
+            AddBudgetCategoryView()
+          case .edit(let budgetCategory):
+            AddBudgetCategoryView(budgetCategory: budgetCategory)
+        }
       }
     }
   }
@@ -52,5 +74,9 @@ extension ContentView {
     } catch {
       print("Unable to Delete : \(error.localizedDescription)")
     }
+  }
+  
+  private func editBudgetCategory(budgetCategory: BudgetCategory) {
+    sheetAction = .edit(budgetCategory)
   }
 }

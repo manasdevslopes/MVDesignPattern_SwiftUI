@@ -14,6 +14,11 @@ struct AddBudgetCategoryView: View {
   @State private var total: Double = 1000
   @State private var messages: [String] = []
   
+  private var budgetCategory: BudgetCategory?
+  init(budgetCategory: BudgetCategory? = nil) {
+    self.budgetCategory = budgetCategory
+  }
+  
   var isFormValid: Bool {
     messages.removeAll()
     if title.isEmpty {
@@ -43,14 +48,21 @@ struct AddBudgetCategoryView: View {
         ForEach(messages, id: \.self) { message in
           Text(message)
         }
-      }.toolbar {
+      }
+      .onAppear {
+        if let budgetCategory {
+          title = budgetCategory.title
+          total = budgetCategory.total
+        }
+      }
+      .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
           Button("Cancel") { dismiss() }
         }
         ToolbarItem(placement: .navigationBarTrailing) {
           Button("Save") {
             if isFormValid {
-              save()
+              saveOrUpdate()
             }
           }
         }
@@ -66,10 +78,17 @@ struct AddBudgetCategoryView_Previews: PreviewProvider {
 }
 
 extension AddBudgetCategoryView {
-  private func save() {
-    let budgetCategory = BudgetCategory(context: viewContext)
-    budgetCategory.title = title
-    budgetCategory.total = total
+  private func saveOrUpdate() {
+    if let budgetCategory {
+      // update the existing budget category
+      let budget = BudgetCategory.byId(budgetCategory.objectID)
+      budget.title = title
+      budget.total = total
+    } else {
+      let budgetCategory = BudgetCategory(context: viewContext)
+      budgetCategory.title = title
+      budgetCategory.total = total
+    }
     do {
       try viewContext.save()
       dismiss()
